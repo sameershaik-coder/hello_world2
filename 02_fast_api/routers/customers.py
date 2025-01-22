@@ -42,3 +42,54 @@ def get_customers_with_metadata(
         "total_pages": (total_customers + size - 1) // size,  # Ceiling division
         "data": customers,
     }
+
+@router.get("/{customer_id}", response_model=CustomerSchema)
+def get_customer_by_id(customer_id: int, db: Session = Depends(get_db)):
+    """
+    Get a customer by ID.
+    """
+    customer = db.query(CustomerModel).filter(CustomerModel.id == customer_id).first()
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+    return customer
+
+@router.put("/{customer_id}", response_model=CustomerSchema)
+def update_customer(
+    customer_id: int, updated_data: CustomerSchema, db: Session = Depends(get_db)
+):
+    """
+    Update a customer by ID.
+    """
+    # Retrieve the customer by ID
+    customer = db.query(CustomerModel).filter(CustomerModel.id == customer_id).first()
+
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+
+    # Update the fields
+    customer.username = updated_data.username
+    customer.email = updated_data.email
+    customer.mobile = updated_data.mobile
+
+    # Commit changes to the database
+    db.commit()
+    db.refresh(customer)
+
+    return customer
+
+@router.delete("/{customer_id}", status_code=204)
+def delete_customer(customer_id: int, db: Session = Depends(get_db)):
+    """
+    Delete a customer by ID.
+    """
+    # Retrieve the customer by ID
+    customer = db.query(CustomerModel).filter(CustomerModel.id == customer_id).first()
+
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+
+    # Delete the customer
+    db.delete(customer)
+    db.commit()
+
+    return {"detail": "Customer deleted successfully"}
