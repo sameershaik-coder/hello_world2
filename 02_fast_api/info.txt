@@ -1,3 +1,7 @@
+# RUN
+uvicorn main:app --reload
+
+
 # setting up alembic
 
 alembic init alembic
