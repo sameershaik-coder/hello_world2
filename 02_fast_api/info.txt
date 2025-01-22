@@ -19,3 +19,12 @@ alembic upgrade head
 
 src:
 https://github.com/polarsource/polar/tree/main/server/polar
+
+
+------------------------------------------------------------
+{
+    "id": 1,
+    "username": "JohnDoe",
+    "email": "johndoe@example.com",
+    "mobile": 1234567890
+}

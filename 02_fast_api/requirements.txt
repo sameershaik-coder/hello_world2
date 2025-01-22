@@ -2,3 +2,4 @@ fastapi
 SQLAlchemy
 alembic
 psycopg2
+uvicorn
